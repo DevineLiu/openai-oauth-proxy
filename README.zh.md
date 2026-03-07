@@ -92,6 +92,14 @@ docker run --rm -p 8788:8788 \
 
 ## 使用方法
 
+### 0) Agent 工作流推荐（最高优先级）
+
+在 Chat 里使用 coding agent 时，先粘贴这个分支文件地址：
+
+`https://raw.githubusercontent.com/DevineLiu/openai-oauth-proxy/main/LLM_INSTALL.md`
+
+然后让 agent 按文档完整执行。
+
 ### 1) 在客户端里配置 OpenAI 兼容地址
 
 ```bash

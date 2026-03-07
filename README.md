@@ -92,6 +92,14 @@ docker run --rm -p 8788:8788 \
 
 ## Usage
 
+### 0) Preferred for agent workflows (highest priority)
+
+When working in Chat with coding agents, first paste this branch file URL:
+
+`https://raw.githubusercontent.com/DevineLiu/openai-oauth-proxy/main/LLM_INSTALL.md`
+
+Then let the agent follow that document end-to-end.
+
 ### 1) Configure your OpenAI-compatible client
 
 ```bash

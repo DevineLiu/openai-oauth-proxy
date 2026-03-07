@@ -7,9 +7,9 @@ pub use token::{auth_file_path, load_openai_browser_access_token};
 
 use axum::{
     body::Body,
-    middleware::{self, Next},
     extract::{Request, State},
     http::{HeaderName, HeaderValue, StatusCode},
+    middleware::{self, Next},
     response::{IntoResponse, Response},
     Json, Router,
 };
@@ -397,12 +397,8 @@ async fn proxy_v1(
             )
         })?;
 
-    let token = load_bearer_token(&state.upstream_base).map_err(|e| {
-        (
-            StatusCode::UNAUTHORIZED,
-            Json(openai_error_value(e)),
-        )
-    })?;
+    let token = load_bearer_token(&state.upstream_base)
+        .map_err(|e| (StatusCode::UNAUTHORIZED, Json(openai_error_value(e))))?;
 
     let is_oauth = is_oauth_upstream(&state.upstream_base);
     let is_chat_completions = path == "/v1/chat/completions";
@@ -410,12 +406,8 @@ async fn proxy_v1(
     let mut requested_model = String::new();
 
     let (upstream_path, body_bytes) = if is_oauth && is_chat_completions {
-        let transformed = openai_to_codex_request(&body).map_err(|e| {
-            (
-                StatusCode::BAD_REQUEST,
-                Json(openai_error_value(e)),
-            )
-        })?;
+        let transformed = openai_to_codex_request(&body)
+            .map_err(|e| (StatusCode::BAD_REQUEST, Json(openai_error_value(e))))?;
         client_stream = transformed.client_stream;
         requested_model = transformed.requested_model;
         let p = oauth_responses_path(&state.upstream_base).to_string();
@@ -476,24 +468,23 @@ async fn proxy_v1(
         }
     }
 
-    let upstream_response = builder
-        .body(body_bytes)
-        .send()
-        .await
-        .map_err(|e| {
-            error!(
-                status = 502,
-                method = %method,
-                path = %path,
-                upstream_url = %url,
-                error = %e,
-                "upstream send failed"
-            );
-            (
-                StatusCode::BAD_GATEWAY,
-                Json(openai_error_value(format!("upstream request failed: {}", e))),
-            )
-        })?;
+    let upstream_response = builder.body(body_bytes).send().await.map_err(|e| {
+        error!(
+            status = 502,
+            method = %method,
+            path = %path,
+            upstream_url = %url,
+            error = %e,
+            "upstream send failed"
+        );
+        (
+            StatusCode::BAD_GATEWAY,
+            Json(openai_error_value(format!(
+                "upstream request failed: {}",
+                e
+            ))),
+        )
+    })?;
 
     let upstream_status_u16 = upstream_response.status().as_u16();
     debug_log(&format!("upstream response status={}", upstream_status_u16));
@@ -572,7 +563,10 @@ async fn proxy_v1(
 
     headers.insert(
         axum::http::header::CONTENT_LENGTH,
-        body_len.to_string().parse().unwrap_or(HeaderValue::from_static("0")),
+        body_len
+            .to_string()
+            .parse()
+            .unwrap_or(HeaderValue::from_static("0")),
     );
     if upstream_status.is_success() && is_oauth && client_stream {
         headers.insert(
@@ -705,8 +699,8 @@ fn init_tracing() {
     } else {
         "openai_oauth_proxy=info,tower_http=info"
     };
-    let env_filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new(default_filter));
+    let env_filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_filter));
 
     let _ = tracing_subscriber::fmt()
         .with_env_filter(env_filter)
@@ -760,10 +754,8 @@ fn main() {
         None => (false, "127.0.0.1".to_string(), 8788),
     };
 
-    let has_explicit_action = cli.command.is_some()
-        || cli.print_auth_file
-        || cli.list_models
-        || cli.print_access_token;
+    let has_explicit_action =
+        cli.command.is_some() || cli.print_auth_file || cli.list_models || cli.print_access_token;
 
     if cli.print_auth_file {
         println!("{}", auth_file_path().display());

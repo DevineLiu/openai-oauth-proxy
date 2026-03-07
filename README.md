@@ -100,20 +100,32 @@ When working in Chat with coding agents, first paste this branch file URL:
 
 Then let the agent follow that document end-to-end.
 
-### 1) Configure your OpenAI-compatible client
+### 1) Start proxy (no subcommand required)
+
+Default first-run flow:
+
+1. Run `openai-oauth-proxy` (no subcommand).
+2. If a local token exists, it starts proxy directly.
+3. If no token exists, it runs OAuth login first, then starts proxy.
+By default, `openai-oauth-proxy serve` listens on `127.0.0.1:8788` and uses upstream `https://chatgpt.com/backend-api`.
+It reads credentials in this order: `OPENAI_PROXY_BEARER_TOKEN` -> `OPENAI_OAUTH_TOKEN` / `OPENAI_API_KEY` -> local auth file (`AGENT_AUTH_FILE`).
+
+You can still use explicit commands if needed: `openai-oauth-proxy auth` and `openai-oauth-proxy serve`.
+
+### 2) Configure your OpenAI-compatible client
 
 ```bash
 export OPENAI_BASE_URL=http://127.0.0.1:8788/v1
 export OPENAI_API_KEY=proxy
 ```
 
-### 2) Health check
+### 3) Health check
 
 ```bash
 curl -s http://127.0.0.1:8788/healthz
 ```
 
-### 3) Common commands
+### 4) Common commands
 
 ```bash
 openai-oauth-proxy auth

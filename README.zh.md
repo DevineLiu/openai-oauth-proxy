@@ -100,20 +100,33 @@ docker run --rm -p 8788:8788 \
 
 然后让 agent 按文档完整执行。
 
-### 1) 在客户端里配置 OpenAI 兼容地址
+### 1) 启动代理（无需子命令）
+
+默认首次流程：
+
+1. 运行 `openai-oauth-proxy`（不带子命令）。
+2. 如果本地已有 token，会直接启动代理。
+3. 如果没有 token，会先走 OAuth 登录，再启动代理。
+
+默认情况下，代理监听 `127.0.0.1:8788`，上游为 `https://chatgpt.com/backend-api`。
+凭证读取优先级为：`OPENAI_PROXY_BEARER_TOKEN` -> `OPENAI_OAUTH_TOKEN` / `OPENAI_API_KEY` -> 本地认证文件（`AGENT_AUTH_FILE`）。
+
+如果你需要，也可以显式使用：`openai-oauth-proxy auth` 和 `openai-oauth-proxy serve`。
+
+### 2) 在客户端里配置 OpenAI 兼容地址
 
 ```bash
 export OPENAI_BASE_URL=http://127.0.0.1:8788/v1
 export OPENAI_API_KEY=proxy
 ```
 
-### 2) 健康检查
+### 3) 健康检查
 
 ```bash
 curl -s http://127.0.0.1:8788/healthz
 ```
 
-### 3) 常用命令
+### 4) 常用命令
 
 ```bash
 # 启动 OAuth 认证流程

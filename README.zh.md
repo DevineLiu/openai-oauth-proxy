@@ -60,6 +60,12 @@ openai-oauth-proxy serve
 
 ## Docker 安装
 
+### 拉取已发布镜像（GHCR）
+
+```bash
+docker pull ghcr.io/devineliu/openai-oauth-proxy:latest
+```
+
 ### 构建镜像
 
 ```bash
@@ -168,8 +174,12 @@ openai-oauth-proxy serve
 
 ## 开源就绪
 
-- 许可证：MIT（`LICENSE`）
+- 默认分支：`main`
+- 镜像发布分支：推送到 `main` 时会发布 `ghcr.io/devineliu/openai-oauth-proxy:latest`（多架构 `linux/amd64,linux/arm64`）
 - 安全策略：`SECURITY.md`
+- 安全修复支持：最新 `main` 分支
+- 漏洞私密上报：`https://github.com/DevineLiu/openai-oauth-proxy/security/advisories/new`
+- 许可证：MIT（`LICENSE`）
 - CI 工作流：`.github/workflows/ci.yml`
 - 安全工作流（cargo-audit + CodeQL）：`.github/workflows/security.yml`
 - 依赖更新：`.github/dependabot.yml`

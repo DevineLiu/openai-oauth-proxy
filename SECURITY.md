@@ -17,4 +17,4 @@ Send a private report with:
 
 Until a dedicated security contact is configured, open a GitHub Security Advisory draft in this repository:
 
-`https://github.com/<owner>/<repo>/security/advisories/new`
+`https://github.com/DevineLiu/openai-oauth-proxy/security/advisories/new`

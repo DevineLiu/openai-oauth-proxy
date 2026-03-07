@@ -60,6 +60,12 @@ openai-oauth-proxy serve
 
 ## Docker Install
 
+### Pull Published Image (GHCR)
+
+```bash
+docker pull ghcr.io/devineliu/openai-oauth-proxy:latest
+```
+
 ### Build Image
 
 ```bash
@@ -157,8 +163,12 @@ openai-oauth-proxy serve
 
 ## Open Source Readiness
 
-- License: MIT (`LICENSE`)
+- Default branch: `main`
+- Image publishing branch: pushes to `main` publish `ghcr.io/devineliu/openai-oauth-proxy:latest` (multi-arch `linux/amd64,linux/arm64`)
 - Security policy: `SECURITY.md`
+- Security fix support: latest `main` branch
+- Private vulnerability reporting: `https://github.com/DevineLiu/openai-oauth-proxy/security/advisories/new`
+- License: MIT (`LICENSE`)
 - CI workflow: `.github/workflows/ci.yml`
 - Security workflow (cargo-audit + CodeQL): `.github/workflows/security.yml`
 - Dependency updates: `.github/dependabot.yml`

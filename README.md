@@ -45,7 +45,7 @@ In detail:
 ### Install
 
 ```bash
-cargo install --path .
+cargo install --git https://github.com/liuhongru/openai-oauth-proxy --branch main
 ```
 
 ### Authenticate and Start

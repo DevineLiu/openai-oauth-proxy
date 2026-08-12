@@ -184,13 +184,9 @@ fn openai_to_codex_request(body: &[u8]) -> Result<CodexTransformResult, String> 
     let model = req
         .get("model")
         .and_then(Value::as_str)
-        .unwrap_or("gpt-5.2-codex");
-    let model = if !model.to_lowercase().contains("codex") {
-        "gpt-5.2-codex"
-    } else {
-        model
-    };
-    let client_stream = req.get("stream").and_then(Value::as_bool).unwrap_or(false);
+        .unwrap_or("gpt-5.5");
+
+        let client_stream = req.get("stream").and_then(Value::as_bool).unwrap_or(false);
 
     let codex_body = serde_json::json!({
         "model": model,
@@ -635,7 +631,7 @@ fn start_proxy_server(host: &str, port: u16) -> Result<(), anyhow::Error> {
     println!("    -H \"Content-Type: application/json\" \\");
     println!("    -H \"Authorization: Bearer proxy\" \\");
     println!(
-        "    -d '{{\"model\":\"gpt-5.2-codex\",\"messages\":[{{\"role\":\"user\",\"content\":\"hello\"}}],\"stream\":false}}'"
+        "    -d '{{\"model\":\"gpt-5.5\",\"messages\":[{{\"role\":\"user\",\"content\":\"hello\"}}],\"stream\":false}}'"
     );
 
     let state = AppState {
